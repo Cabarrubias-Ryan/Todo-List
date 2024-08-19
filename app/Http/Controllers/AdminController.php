@@ -64,4 +64,10 @@ class AdminController extends Controller
         }
     }
 
+    public function getUserTasks($id)
+    {
+        $tasks = Task::where('user_id', $id)->get();
+        return response()->json(['tasks' => $tasks]);
+    }
+
 }

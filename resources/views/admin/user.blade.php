@@ -50,7 +50,7 @@
                                 <td>{{$data->email}}</td>
                                 <td>{{$data->task_count}}</td>
                                 <td class="text-center">
-                                    <button type="button" class="btn btn-success view-btn" style="font-size: 0.7rem" data-bs-toggle="modal" data-bs-target="#studentViewModal">View</button>
+                                    <button type="button" class="btn btn-success view-btn" style="font-size: 0.7rem" data-bs-toggle="modal" data-bs-target="#studentViewModal" data-id="{{ $data->id}}">View</button>
                                 </td>
                             </tr>
                         @endif
@@ -67,7 +67,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form>
-                <div class="modal-body">
+                <div class="modal-body" id="modalContent">
                     
                 </div>
                 <div class="modal-footer">
@@ -81,6 +81,34 @@
 @endsection
 
 @section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.view-btn').forEach(button => {
+        button.addEventListener('click', function() {
+
+            const userId = this.getAttribute('data-id');
+            const url = `{{ route('admin.view', ['id' => '__USER_ID__']) }}`.replace('__USER_ID__', userId);
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    let content = '';
+                    if (data.tasks.length > 0) {
+                        content += '<ul class="list-group">';
+                        data.tasks.forEach(task => {
+                            content += `<li class="list-group-item">
+                                            <strong>Task: </strong> ${task.task_title} - ${task.deadline}
+                                        </li>`;
+                        });
+                        content += '</ul>';
+                    } else {
+                        content = '<p>No tasks found for this user.</p>';
+                    }
+                    document.getElementById('modalContent').innerHTML = content;
+                })
+                .catch(error => console.error('Error:', error));
+        });
+    });
+});
 
 </script>
 @endsection

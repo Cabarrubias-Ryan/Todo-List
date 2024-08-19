@@ -48,7 +48,7 @@ Route::prefix('admin')->middleware(['auth', 'user-access:admin'])->group(functio
         Route::get('/task', 'displayTask')->name('admin.task');
         Route::get('/users', 'displayUser')->name('admin.user');
 
-
+        Route::get('/users/tasks/{id}', 'getUserTasks')->name('admin.view');
         Route::delete('/task/delete/{id}', 'deleteTask')->name('admin.delete');
         Route::put('/task/edit/{id}', 'editTask')->name('admin.edit');
     });
